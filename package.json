@@ -1,0 +1,56 @@
+{
+  "name": "tauri-solid",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "tauri:build": "tauri build",
+    "tauri:dev": "tauri dev",
+    "prettier": "prettier --write \"**/src/*.{ts,tsx,js,jsx}\"",
+    "clean": "rm -rf node_modules pnpm-lock.yaml src-tauri/target && pnpm i",
+    "tauri:build:universal": "tauri build --target universal-apple-darwin",
+    "tauri:build:silicon": "tauri build --target aarch64-apple-darwin"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "prettier --write \"**/src/*.{ts,tsx,js,jsx}\""
+    }
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.0.5",
+    "@types/node": "^18.7.13",
+    "@typescript-eslint/eslint-plugin": "^5.35.1",
+    "@typescript-eslint/parser": "^5.35.1",
+    "@vitest/coverage-c8": "^0.22.1",
+    "@vitest/ui": "^0.22.1",
+    "esbuild": "^0.15.5",
+    "eslint": "^8.23.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.2",
+    "vite": "^3.0.9",
+    "vite-plugin-minify": "^1.5.2",
+    "vite-plugin-solid": "^2.3.0",
+    "vitest": "^0.22.1"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.28.0",
+    "@solidjs/router": "^0.4.2",
+    "@tauri-apps/api": "^1.0.2",
+    "autoprefixer": "^10.4.8",
+    "postcss": "^8.4.16",
+    "solid-js": "^1.5.1",
+    "tailwindcss": "^3.1.8"
+  },
+  "wallaby": {
+    "slowTestThreshold": 200,
+    "runMode": "onSave",
+    "hints": {
+      "ignoreCoverageForFile": "/ignore file coverage/",
+      "ignoreCoverage": "/ignore coverage/"
+    }
+  }
+}
