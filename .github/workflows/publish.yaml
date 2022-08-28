@@ -3,13 +3,10 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - main
-      - master
-      - dev
 
 jobs:
   release:
+    if: ${{ github.ref_name == 'dev' }}
     strategy:
       fail-fast: false
       matrix:
