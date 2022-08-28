@@ -18,7 +18,7 @@ jobs:
         uses: tj-actions/branch-names@v6
 
       - name: Echo
-        run: echo "${{ steps.tag.outputs.branch }}" 
+        run: echo "${{ github.base_ref }}" 
       
 
   release:
