@@ -24,7 +24,7 @@ jobs:
   release:
     needs: 
       - check
-    if: needs.check.outputs.branch == 'dev'
+    if: ${{ needs.check.outputs.branch == 'dev' }}
     strategy:
       fail-fast: true
       matrix:
@@ -79,8 +79,7 @@ jobs:
           script: |
             return context.payload.ref.replace(/\/refs\/tags\//, '');
 
-      - name: Echo
-        run: echo ${{ steps.tag.outputs.result }}
+   
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
@@ -88,8 +87,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ steps.tag.outputs.result }} # tauri-action replaces \_\_VERSION\_\_ with the app version
-          releaseName: ${{ steps.tag.outputs.result }}
+          tagName: test 23 # tauri-action replaces \_\_VERSION\_\_ with the app version
+          releaseName: test 23
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
