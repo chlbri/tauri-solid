@@ -21,16 +21,7 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@v2
-      
-      - name: Setup cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-            ${{ runner.os }}-
+        uses: actions/checkout@v3
 
       - name: Bump version and push tag
         id: tag_version
@@ -38,13 +29,30 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.2
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - uses: pnpm/action-setup@v2.0.1
+        name: Install pnpm
+        id: pnpm-install
         with:
           version: latest
+          run_install: false
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Rust setup
         uses: actions-rs/toolchain@v1
@@ -60,27 +68,8 @@ jobs:
       - name: Install app dependencies
         run: pnpm install --frozen-lockfile
 
-      # - name: Extract tag name
-      #   id: tag
-      #   uses: actions/github-script@0.2.0
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     script: |
-      #       return context.payload.ref.replace(/\/refs\/tags\//, '');
-      
-      # - name: Upload binaries to release (Mac OS)
-      #   if: matrix.platform == 'macos-latest'
-      #   uses: svenstaro/upload-release-action@v2
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: './src-tauri/target/release/bundle/macos/${{ github.event.repository.name }}.app'
-      #     tag: ${{ steps.tag_version.outputs.new_tag }}
-      #     overwrite: true
-      #     body: "Mac OS"
-
       - name: Build the app
-        uses: tauri-apps/tauri-action@v0
-
+        uses: tauri-apps/tauri-action@v0.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -89,3 +78,4 @@ jobs:
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: false
           prerelease: false
+          
