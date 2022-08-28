@@ -8,7 +8,7 @@ jobs:
   check: 
     runs-on: ubuntu-latest
     outputs: 
-      branch: steps.branch-name.outputs.result == "dev"
+      branch: steps.branch-name.outputs.result 
     steps: 
       - name: Get branch name
         id: branch-name
@@ -18,7 +18,7 @@ jobs:
   release:
     needs: 
       - check
-    if: needs.check.outputs.branch == true
+    if: needs.check.outputs.branch == "dev"
     strategy:
       fail-fast: true
       matrix:
