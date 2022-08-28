@@ -1,8 +1,8 @@
 name: Release
 on:
   push:
-    tags:
-      - 'v*'
+    # tags:
+    #   - 'v*'
 
 jobs:
   check: 
@@ -15,13 +15,13 @@ jobs:
         uses: tj-actions/branch-names@v6
 
       - name: Echo
-        run: echo '${{ steps.tag.outputs.base_ref_branch }}'
+        run: echo ${{ toJSON(github) }}
       
 
   release:
     needs: 
       - check
-    if: needs.check.outputs.branch == 'dev'
+    if: needs.check.outputs.branch == 'ddfdfdev'
     strategy:
       fail-fast: true
       matrix:
