@@ -13,12 +13,14 @@ jobs:
       - name: Get branch name
         id: branch-name
         uses: tj-actions/branch-names@v6
+      - name: Echo
+        run: echo ${{ steps.branch-name.outputs.branch }} 
       
 
   release:
     needs: 
       - check
-    if: needs.check.outputs.branch == "dev"
+    if: needs.check.outputs.branch == 'dev'
     strategy:
       fail-fast: true
       matrix:
