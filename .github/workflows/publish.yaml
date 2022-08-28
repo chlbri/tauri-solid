@@ -5,14 +5,28 @@ on:
       - 'v*'
 
 jobs:
+  check: 
+    runs-on: ubuntu-latest
+    outputs: 
+      branch: steps.branch-name.outputs.result == "dev"
+    steps: 
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v6
+      
+
   release:
-    if: ${{ github.ref_name == 'dev' }}
+    needs: 
+      - check
+    if: needs.check.outputs.branch == true
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         platform: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
+
+     
       - name: Checkout repository
         uses: actions/checkout@v2
 
