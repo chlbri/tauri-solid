@@ -8,14 +8,14 @@ jobs:
   check: 
     runs-on: ubuntu-latest
     outputs: 
-      branch: ${{ steps.tag.outputs.current_branch }}
+      branch: ${{ steps.tag.outputs.base_ref_branch }}
     steps: 
       - name: Get branch name
         id: tag
         uses: tj-actions/branch-names@v6
 
       - name: Echo
-        run: echo '${{ steps.tag.outputs.current_branch }}'
+        run: echo '${{ steps.tag.outputs.base_ref_branch }}'
       
 
   release:
