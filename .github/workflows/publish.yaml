@@ -1,8 +1,8 @@
 name: Release
 on:
   push:
-    # tags:
-    #   - 'v*'
+    tags:
+      - 'v*'
 
 jobs:
   check: 
@@ -25,7 +25,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
+        platform: 
+         - macos-latest
+        #  - ubuntu-latest 
+        #  - windows-latest
+
     runs-on: ${{ matrix.platform }}
     steps:
 
@@ -65,27 +69,38 @@ jobs:
       - name: Install app dependencies
         run: pnpm install
 
-      - name: Build web
-        run: pnpm build
 
-      - name: Extract tag name
-        id: tag
-        uses: actions/github-script@0.2.0
+      - name: Build Tauri
+        if: matrix.platform == 'macos-latest'
+        run: pnpm run tauri:build
+
+      # - name: Extract tag name
+      #   id: tag
+      #   uses: actions/github-script@0.2.0
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     script: |
+      #       return context.payload.ref.replace(/\/refs\/tags\//, '');
+      
+      - name: Upload binaries to release (Mac OS)
+        if: matrix.platform == 'macos-latest'
+        uses: svenstaro/upload-release-action@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            return context.payload.ref.replace(/\/refs\/tags\//, '');
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: 'src-tauri/target/release/bundle/macos/${{ github.event.repository.name }}.app'
+          file_glob: true
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Mac OS"
 
-   
+      # - name: Build the app
+      #   uses: tauri-apps/tauri-action@v0
 
-      - name: Build the app
-        uses: tauri-apps/tauri-action@v0
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: test 23 # tauri-action replaces \_\_VERSION\_\_ with the app version
-          releaseName: test 23
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: false
-          prerelease: false
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tagName: test 23 # tauri-action replaces \_\_VERSION\_\_ with the app version
+      #     releaseName: test 23
+      #     releaseBody: 'See the assets to download this version and install.'
+      #     releaseDraft: false
+      #     prerelease: false
