@@ -60,10 +60,6 @@ jobs:
       - name: Install app dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Tauri
-        if: matrix.platform == 'macos-latest'
-        run: pnpm run tauri:build
-
       # - name: Extract tag name
       #   id: tag
       #   uses: actions/github-script@0.2.0
@@ -81,7 +77,6 @@ jobs:
       #     tag: ${{ steps.tag_version.outputs.new_tag }}
       #     overwrite: true
       #     body: "Mac OS"
-
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
