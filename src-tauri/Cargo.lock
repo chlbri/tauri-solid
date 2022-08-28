@@ -2140,16 +2140,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "react-editor"
-version = "0.0.0"
-dependencies = [
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
-]
-
-[[package]]
 name = "redox_syscall"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2862,6 +2852,16 @@ dependencies = [
  "webview2-com",
  "windows 0.37.0",
  "wry",
+]
+
+[[package]]
+name = "tauri-solid"
+version = "0.0.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
 ]
 
 [[package]]
