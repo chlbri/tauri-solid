@@ -8,16 +8,17 @@ jobs:
   check: 
     runs-on: ubuntu-latest
     outputs: 
-      branch: steps.branch-name.outputs.result 
+      branch: steps.tag.outputs.result 
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Get branch name
-        id: branch-name
+        id: tag
         uses: tj-actions/branch-names@v6
+
       - name: Echo
-        run: echo ${{ steps.branch-name.outputs.branch }} 
+        run: echo "${{ steps.tag.outputs.branch }}" 
       
 
   release:
