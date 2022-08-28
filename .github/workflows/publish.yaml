@@ -8,7 +8,7 @@ jobs:
   check: 
     runs-on: ubuntu-latest
     outputs: 
-      branch: steps.tag.outputs.result 
+      branch: steps.tag.outputs.current_branch 
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -18,7 +18,7 @@ jobs:
         uses: tj-actions/branch-names@v6
 
       - name: Echo
-        run: echo '${{ github.base_ref }}'
+        run: echo '${{ steps.tag.outputs.current_branch }}'
       
 
   release:
