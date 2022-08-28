@@ -8,34 +8,7 @@ on:
     
 
 jobs:
-  check: 
-    runs-on: ubuntu-latest
-    outputs: 
-      branch: ${{ steps.tag.outputs.current_branch }}
-    steps: 
-      - name: Get branch name
-        id: tag
-        uses: tj-actions/branch-names@v6
-
-      - name: Echo
-        run: echo ${{ steps.tag.outputs.current_branch }}
-      
-  tag: 
-    runs-on: ubuntu-latest
-    steps: 
-    - name: Bump version and push tag
-      id: tag_version
-      uses: mathieudutour/github-tag-action@v6.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-
-
   release:
-    needs: 
-      - check
-      - tag
-
-    if: needs.check.outputs.branch == 'ddfdfdev'
     strategy:
       fail-fast: true
       matrix:
@@ -47,14 +20,8 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
 
-     
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.2
-        with:
-          version: latest
       
       - name: Setup cache
         uses: actions/cache@v3
@@ -65,9 +32,19 @@ jobs:
             ${{ runner.os }}-pnpm-
             ${{ runner.os }}-
 
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.2
+        with:
+          version: latest
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
 
       - name: Rust setup
         uses: actions-rs/toolchain@v1
@@ -83,10 +60,12 @@ jobs:
       - name: Install app dependencies
         run: pnpm install
 
-
       - name: Build Tauri
         if: matrix.platform == 'macos-latest'
         run: pnpm run tauri:build
+
+      - name: Name the repository
+        run: echo ${{ github.event.repository.name }}
 
       # - name: Extract tag name
       #   id: tag
@@ -103,9 +82,10 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: 'src-tauri/target/release/bundle/macos/${{ github.event.repository.name }}.app'
           file_glob: true
-          tag: ${{ github.ref }}
+          tag: ${{ steps.tag_version.outputs.new_tag }}
           overwrite: true
           body: "Mac OS"
+
 
       # - name: Build the app
       #   uses: tauri-apps/tauri-action@v0
