@@ -15,7 +15,7 @@ jobs:
         uses: tj-actions/branch-names@v6
 
       - name: Echo
-        run: echo  fromJSON(github)
+        run: echo ${{toJSON(github)}}
       
 
   release:
