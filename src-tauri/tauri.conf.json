@@ -6,21 +6,14 @@
     "distDir": "../dist",
     "withGlobalTauri": false
   },
-  "package": {
-    "productName": "tauri-solid",
-    "version": "0.0.9"
-  },
+  "package": { "productName": "tauri-solid", "version": "0.0.1" },
   "tauri": {
-    "allowlist": {
-      "all": true
-    },
+    "allowlist": { "all": true },
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
       "copyright": "",
-      "deb": {
-        "depends": []
-      },
+      "deb": { "depends": [] },
       "externalBin": [],
       "icon": [
         "icons/32x32.png",
@@ -46,12 +39,8 @@
         "timestampUrl": ""
       }
     },
-    "security": {
-      "csp": null
-    },
-    "updater": {
-      "active": false
-    },
+    "security": { "csp": null },
+    "updater": { "active": false },
     "windows": [
       {
         "fullscreen": false,
