@@ -54,6 +54,17 @@ jobs:
       - name: Build web
         run: pnpm build
 
+      - name: Extract tag name
+        id: tag
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            return context.payload.ref.replace(/\/refs\/tags\//, '');
+
+      - name: Echo
+        run: echo ${{ steps.tag.outputs.result }}
+
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
 
@@ -61,7 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: v__VERSION__ # tauri-action replaces \_\_VERSION\_\_ with the app version
-          releaseName: 'v0.0.1'
+          releaseName: ${{ steps.tag.outputs.result }}
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
