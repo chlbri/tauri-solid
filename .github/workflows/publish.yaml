@@ -6,7 +6,6 @@ on:
       - main
       - dev
     
-
 jobs:
   release:
     strategy:
@@ -34,7 +33,7 @@ jobs:
         with:
           node-version: 16
 
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2.2.2
         name: Install pnpm
         id: pnpm-install
         with:
@@ -73,7 +72,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ steps.tag_version.outputs.new_tag }} # tauri-action replaces \_\_VERSION\_\_ with the app version
+          tagName: ${{ steps.tag_version.outputs.new_tag }}
           releaseName: ${{ steps.tag_version.outputs.new_tag }}
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: false
