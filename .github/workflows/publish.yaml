@@ -10,6 +10,9 @@ jobs:
     outputs: 
       branch: steps.branch-name.outputs.result 
     steps: 
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Get branch name
         id: branch-name
         uses: tj-actions/branch-names@v6
