@@ -5,20 +5,15 @@ on:
       - master
       - main
       - dev
-    
+
 jobs:
-  release:
-    strategy:
-      fail-fast: true
-      matrix:
-        platform: 
-         - macos-latest
-         - ubuntu-latest 
-         - windows-latest
 
-    runs-on: ${{ matrix.platform }}
-    steps:
+  tag:
+    runs-on: ubuntu-latest
+    outputs: 
+      tag: ${{steps.tag_version.outputs.new_tag}}
 
+    steps: 
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -27,6 +22,25 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Display tag
+        run: echo ${{steps.tag_version.outputs.new_tag}}
+
+  release:
+    needs: 
+      - tag
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: 
+         - macos-latest
+         - ubuntu-latest 
+         - windows-latest
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -85,12 +99,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ steps.tag_version.outputs.new_tag }}
-          releaseName: ${{ steps.tag_version.outputs.new_tag }}
+          tagName: ${{ needs.tag.outputs.tag }}
+          releaseName: ${{ needs.tag.outputs.tag }}
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: false
           prerelease: false
       
       - name: END
-        run: echo 'Goodbye, evrything is done !'
+        run: echo 'Goodbye, everything is done !'
           
