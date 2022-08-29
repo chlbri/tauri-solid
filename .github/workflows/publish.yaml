@@ -13,8 +13,8 @@ jobs:
       matrix:
         platform: 
          - macos-latest
-        #  - ubuntu-latest 
-        #  - windows-latest
+         - ubuntu-latest 
+         - windows-latest
 
     runs-on: ${{ matrix.platform }}
     steps:
