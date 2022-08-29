@@ -77,4 +77,15 @@ jobs:
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: false
           prerelease: false
+      
+      - uses: actions/cache@v3
+        name: Setup tauri cache
+        with:
+          path: '**/src-tauri/target'
+          key: ${{ runner.os }}-tauri-store-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-tauri-store-
+      
+      - name: END
+        run: echo 'Goodbye, evrything is done !'
           
