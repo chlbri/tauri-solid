@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "test": "vitest run",
+    "git:test": "act --container-architecture linux/amd64 -s GITHUB_TOKEN=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 -P ubuntu-latest=act-tauri",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "start": "vite",
